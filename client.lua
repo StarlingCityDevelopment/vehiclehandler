@@ -107,47 +107,47 @@ local function startThread(vehicle)
     end)
 end
 
-AddEventHandler('entityDamaged', function (victim, _, weapon, _)
-    if not Handler or not Handler:isActive() then return end
-    if victim ~= cache.vehicle then return end
-    if GetWeapontypeGroup(weapon) ~= 0 then return end
+-- AddEventHandler('entityDamaged', function (victim, _, weapon, _)
+--     if not Handler or not Handler:isActive() then return end
+--     if victim ~= cache.vehicle then return end
+--     if GetWeapontypeGroup(weapon) ~= 0 then return end
 
-    -- Damage handler
-    local bodyDiff = Handler:getData('body') - GetVehicleBodyHealth(cache.vehicle)
-    if bodyDiff > 0 then
+--     -- Damage handler
+--     local bodyDiff = Handler:getData('body') - GetVehicleBodyHealth(cache.vehicle)
+--     if bodyDiff > 0 then
 
-        -- Calculate latest damage
-        local bodyDamage = bodyDiff * Settings.globalmultiplier * Settings.classmultiplier[Handler:getClass()]
-        local newEngine = GetVehicleEngineHealth(cache.vehicle) - bodyDamage
+--         -- Calculate latest damage
+--         local bodyDamage = bodyDiff * Settings.globalmultiplier * Settings.classmultiplier[Handler:getClass()]
+--         local newEngine = GetVehicleEngineHealth(cache.vehicle) - bodyDamage
 
-        -- Update engine health
-        if newEngine > 0 and newEngine ~= Handler:getData('engine') then
-            SetVehicleEngineHealth(cache.vehicle, newEngine)
-        else
-            SetVehicleEngineHealth(cache.vehicle, 0.0)
-        end
-    end
+--         -- Update engine health
+--         if newEngine > 0 and newEngine ~= Handler:getData('engine') then
+--             SetVehicleEngineHealth(cache.vehicle, newEngine)
+--         else
+--             SetVehicleEngineHealth(cache.vehicle, 0.0)
+--         end
+--     end
 
-    -- Impact handler
-    local speedDiff = Handler:getData('speed') - (GetEntitySpeed(cache.vehicle) *  Handler:getUnits())
-    if speedDiff >= Settings.threshold.speed then
+--     -- Impact handler
+--     local speedDiff = Handler:getData('speed') - (GetEntitySpeed(cache.vehicle) *  Handler:getUnits())
+--     if speedDiff >= Settings.threshold.speed then
 
-        -- Handle wheel loss
-        if Settings.breaktire then
-            if bodyDiff >= Settings.threshold.health then
-                math.randomseed(GetGameTimer())
-                Handler:breakTire(cache.vehicle, math.random(0, 1))
-            end
-        end
+--         -- Handle wheel loss
+--         if Settings.breaktire then
+--             if bodyDiff >= Settings.threshold.health then
+--                 math.randomseed(GetGameTimer())
+--                 Handler:breakTire(cache.vehicle, math.random(0, 1))
+--             end
+--         end
 
-        -- Handle heavy impact (disable vehicle)
-        if speedDiff >= Settings.threshold.heavy then
-            SetVehicleUndriveable(cache.vehicle, true)
-            SetVehicleEngineHealth(cache.vehicle, 0.0)
-            SetVehicleEngineOn(cache.vehicle, false, true, false)
-        end
-    end
-end)
+--         -- Handle heavy impact (disable vehicle)
+--         if speedDiff >= Settings.threshold.heavy then
+--             SetVehicleUndriveable(cache.vehicle, true)
+--             SetVehicleEngineHealth(cache.vehicle, 0.0)
+--             SetVehicleEngineOn(cache.vehicle, false, true, false)
+--         end
+--     end
+-- end)
 
 lib.callback.register('vehiclehandler:basicfix', function(fixtype)
     if not Handler then return end
